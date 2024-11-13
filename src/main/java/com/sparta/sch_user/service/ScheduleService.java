@@ -4,6 +4,7 @@ import com.sparta.sch_user.dto.ScheduleRequestDto;
 import com.sparta.sch_user.dto.ScheduleResponseDto;
 import com.sparta.sch_user.dto.ScheduleUpdateRequestDto;
 import com.sparta.sch_user.entity.Schedule;
+import com.sparta.sch_user.entity.User;
 import com.sparta.sch_user.repository.ScheduleRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
+    private final UserService userService;
 
     public List<ScheduleResponseDto> findAll() {
         List<Schedule> schedules = scheduleRepository.findAll();
@@ -36,7 +38,8 @@ public class ScheduleService {
 
     @Transactional
     public ScheduleResponseDto createSchedule(ScheduleRequestDto requestDto) {
-        Schedule schedule = new Schedule(requestDto.getWriterName(), requestDto.getTitle(), requestDto.getDescription());
+        User user = userService.findUserById(requestDto.getUserId());
+        Schedule schedule = new Schedule(user, requestDto.getTitle(), requestDto.getDescription());
 
         Schedule savedSchedule = scheduleRepository.save(schedule);
         return ScheduleResponseDto.toDto(savedSchedule);

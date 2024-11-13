@@ -12,17 +12,17 @@ public class Schedule extends BaseEntity {
     private String title;
     private String description;
 
-    private String writerName;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    public Schedule(String writerName, String title, String description) {
-        this.writerName = writerName;
+    public Schedule(User user, String title, String description) {
+        this.user = user;
         this.title = title;
         this.description = description;
     }
 
-    public Schedule() {
-
-    }
+    public Schedule() {}
 
     public void update(String title, String description) {
         this.title = title;
